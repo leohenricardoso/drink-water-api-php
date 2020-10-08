@@ -3,9 +3,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once('../class/Api.php');
 
-$methodRequested = strtoupper($_SERVER['REQUEST_METHOD']);
-$body = json_decode(file_get_contents('php://input'), 1) ?? [];
 $header = getallheaders() ?? [];
+$body = json_decode(file_get_contents('php://input'), 1) ?? [];
+$methodRequested = strtoupper($_SERVER['REQUEST_METHOD']);
 
 if (isset($_GET['iduser'])) {
     $body['id_param_url'] = $_GET['iduser'];

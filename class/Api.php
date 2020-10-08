@@ -22,6 +22,12 @@ class Api
         $this->header = $header;
     }
 
+    /**
+     * Checks whether the request is for a user or
+     * for a user list and returns them
+     *
+     * @return void
+     */
     public function getOrListUser()
     {
         try {
@@ -46,14 +52,14 @@ class Api
             }
 
             if (!empty($id)) {
-                $response = $users->getById($id);
+                $userData = $users->getById($id);
             } else {
-                $response = $users->getAll();
+                $userData = $users->getAll();
             }
 
-            if ($response) {
+            if ($userData) {
                 http_response_code(200);
-                echo json_encode($response);
+                echo json_encode($userData);
             }
         } catch (\Exception $e) {
             http_response_code(500);
@@ -63,6 +69,11 @@ class Api
         }
     }
 
+    /**
+     * Create a new user
+     *
+     * @return void
+     */
     public function createUser()
     {
         try {
@@ -78,9 +89,9 @@ class Api
                 $password = $this->body['password'];
             }
 
-            $response = (new User($this->db, $name, $email, $password))->create();
+            $userData = (new User($this->db, $name, $email, $password))->create();
 
-            if ($response) {
+            if ($userData) {
                 http_response_code(200);
                 echo json_encode(
                     array("message" => "Success")
@@ -94,6 +105,11 @@ class Api
         }
     }
 
+    /**
+     * Updates user data
+     *
+     * @return array
+     */
     public function updateUser()
     {
         try {
@@ -133,6 +149,11 @@ class Api
         }
     }
 
+    /**
+     * Delete logged user in by their ID and token
+     *
+     * @return void
+     */
     public function deleteUser()
     {
         try {
@@ -151,7 +172,6 @@ class Api
                 );
             }
 
-            $iduser = $this->body['iduser'];
             $token = $this->header['Authorization'];
 
             $user = new User($this->db);
@@ -174,6 +194,11 @@ class Api
         }
     }
 
+    /**
+     * Increase the water meter drunk by the user
+     *
+     * @return void
+     */
     public function drinkWater()
     {
         try {
@@ -216,6 +241,11 @@ class Api
         }
     }
 
+    /**
+     * Add or change user token and return your data
+     *
+     * @return void
+     */
     public function login()
     {
         try {
@@ -230,12 +260,12 @@ class Api
             $email = $this->body['email'];
             $password = $this->body['password'];
 
-            $response = (new User($this->db))->login($email, $password);
+            $userData = (new User($this->db))->login($email, $password);
 
-            if ($response) {
+            if ($userData) {
                 http_response_code(200);
                 echo json_encode(
-                    $response
+                    $userData
                 );
             }
         } catch (\Exception $e) {

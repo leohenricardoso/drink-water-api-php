@@ -23,6 +23,11 @@ class User
         $this->password = $password;
     }
 
+    /**
+     * Create new user
+     *
+     * @return object
+     */
     public function create()
     {
         if ($this->emailExists($this->email)) {
@@ -50,20 +55,13 @@ class User
         return $data;
     }
 
-    private function generateToken()
-    {
-        $this->token = sha1("{$this->email}{$this->password}");
-    }
-
-    public function emailExists(string $email)
-    {
-        $data = $this->getUserByEmail($email);
-        $num = $data->rowCount();
-
-        return $num;
-    }
-
-    public function getUserByEmail(string $email)
+    /**
+     * Get user by Email
+     *
+     * @param string $email
+     * @return object
+     */
+    public function getUserByEmail($email)
     {
         $this->emailFormat($email);
 
@@ -84,15 +82,13 @@ class User
         return $data;
     }
 
-    public function emailFormat($email)
-    {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception('Invalid email format', 500);
-        }
-        return filter_var($email, FILTER_VALIDATE_EMAIL);
-    }
-
-    public function getUserByToken(string $token)
+    /**
+     * Get user by token
+     *
+     * @param string $token
+     * @return object
+     */
+    public function getUserByToken($token)
     {
 
         $token = explode(' ', $token);
@@ -119,6 +115,11 @@ class User
         return false;
     }
 
+    /**
+     * Get users list
+     *
+     * @return object
+     */
     public function getAll()
     {
         $query = "SELECT * FROM " . $this->tableName . "";
@@ -156,6 +157,12 @@ class User
         }
     }
 
+    /**
+     * Get user by id
+     *
+     * @param int $id
+     * @return void
+     */
     public function getById($id)
     {
         $query = "SELECT * FROM " . $this->tableName . " where id = " . $id;
@@ -188,47 +195,14 @@ class User
         }
     }
 
-    public function setParameters(array $body)
-    {
-        $parameters = [];
-        if (isset($body['name'])) {
-            $parameters['name'] = $body['name'];
-        }
-
-        if (isset($body['email'])) {
-            if ($this->emailExists($body['email'])) {
-                throw new Exception('Email already taken.', 500);
-            }
-
-            $parameters['email'] = $body['email'];
-        }
-
-        if (isset($body['password'])) {
-            $parameters['password'] = $body['password'];
-        }
-
-        return $parameters;
-    }
-
-    public function verifyUsersToken(string $token, int $iduser)
-    {
-        $user = $this->getById($iduser);
-
-        if (!$this->getUserByToken($token)) {
-            throw new Exception('Invalid token aaaa', 401);
-        }
-
-        $user['token'] = 'Bearer ' . $user['token'];
-
-        if ($token != $user['token']) {
-            throw new Exception('Token does not belong to user', 403);
-        }
-
-
-        return true;
-    }
-
-    public function update(int $iduser, array $parameters)
+    /**
+     * Update user
+     *
+     * @param int $iduser
+     * @param array $parameters
+     * @return void
+     */
+    public function update($iduser, $parameters)
     {
         $needNewToken = false;
         $update = '';
@@ -267,12 +241,13 @@ class User
         );
     }
 
-    private function passwordToHash(string $password): string
-    {
-        return sha1($password);
-    }
-
-    public function delete(int $id)
+    /**
+     * Delete user data by id
+     *
+     * @param int $id
+     * @return void
+     */
+    public function delete($id)
     {
         $query = "DELETE
         FROM
@@ -284,7 +259,14 @@ class User
         return $data->execute();
     }
 
-    public function login(string $email, string $password)
+    /**
+     * Add or change user token and return your data
+     *
+     * @param string $email
+     * @param string $password
+     * @return object
+     */
+    public function login($email, $password)
     {
         $this->emailFormat($email);
 
@@ -352,7 +334,78 @@ class User
         return $result;
     }
 
-    public function drink(int $id, int $drink_ml)
+    /**
+     * Checks and takes which parameters were passed in the request body
+     *
+     * @param array $body
+     * @return array
+     */
+    public function setParameters($body)
+    {
+        $parameters = [];
+        if (isset($body['name'])) {
+            $parameters['name'] = $body['name'];
+        }
+
+        if (isset($body['email'])) {
+            if ($this->emailExists($body['email'])) {
+                throw new Exception('Email already taken.', 500);
+            }
+
+            $parameters['email'] = $body['email'];
+        }
+
+        if (isset($body['password'])) {
+            $parameters['password'] = $body['password'];
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * Checks whether the passed token matches the user's token
+     *
+     * @param string $token
+     * @param int $iduser
+     * @return bool
+     */
+    public function verifyUsersToken($token, $iduser)
+    {
+        $user = $this->getById($iduser);
+
+        if (!$this->getUserByToken($token)) {
+            throw new Exception('Invalid token aaaa', 401);
+        }
+
+        $user['token'] = 'Bearer ' . $user['token'];
+
+        if ($token != $user['token']) {
+            throw new Exception('Token does not belong to user', 403);
+        }
+
+
+        return true;
+    }
+
+    /**
+     * Add sha1 encrypt to password
+     *
+     * @param string $password
+     * @return string
+     */
+    private function passwordToHash(string $password): string
+    {
+        return sha1($password);
+    }
+
+    /**
+     * Increase the water meter drunk by the user
+     *
+     * @param int $id
+     * @param int $drink_ml
+     * @return bool
+     */
+    public function drink($id, $drink_ml)
     {
         $query = "UPDATE
             `users`
@@ -366,5 +419,43 @@ class User
         $data->execute();
 
         return true;
+    }
+
+    /**
+     * Create sha1 encrypted token based on email and password
+     *
+     * @return void
+     */
+    private function generateToken()
+    {
+        $this->token = sha1("{$this->email}{$this->password}");
+    }
+
+    /**
+     * Checks if email passed as parameter is already registered
+     *
+     * @param string $email
+     * @return int
+     */
+    public function emailExists(string $email)
+    {
+        $data = $this->getUserByEmail($email);
+        $num = $data->rowCount();
+
+        return $num;
+    }
+
+    /**
+     * Check the email format passed by parameter
+     *
+     * @param string $email
+     * @return string
+     */
+    public function emailFormat($email)
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception('Invalid email format', 500);
+        }
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 }

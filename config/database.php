@@ -9,6 +9,11 @@ class Database
 
     public $conn;
 
+    /**
+     * Returns database connection
+     *
+     * @return object
+     */
     public function getConnection()
     {
         $this->conn = null;

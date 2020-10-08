@@ -21,6 +21,8 @@ switch ($methodRequested) {
         $api->drinkWater();
         break;
     default:
-        # code...
+        echo json_encode(
+            array("message" => "Endpoint not found")
+        );
         break;
 }
