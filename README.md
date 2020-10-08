@@ -1,7 +1,7 @@
 ## Endpoints
 
 ##### Criar novo usuário
-POST ===> http://127.0.0.1/DrinkWater/users/
+POST ===> http://127.0.0.1/drink-water-api-php/users/
 ###### Example:
 ```json
 {
@@ -14,7 +14,7 @@ POST ===> http://127.0.0.1/DrinkWater/users/
 ------------------------------------------------------------------
 
 ##### Login
-POST ===> http://127.0.0.1/DrinkWater/login/
+POST ===> http://127.0.0.1/drink-water-api-php/login/
 ```json
 {
 	"email": "leohenricardoso666@gmail.com",
@@ -25,7 +25,7 @@ POST ===> http://127.0.0.1/DrinkWater/login/
 ------------------------------------------------------------------
 
 ##### Buscar usuário por ID (necessário token)
-GET ===> http://127.0.0.1/DrinkWater/users/
+GET ===> http://127.0.0.1/drink-water-api-php/users/
 ###### Example:
 ```json
 {
@@ -34,17 +34,17 @@ GET ===> http://127.0.0.1/DrinkWater/users/
 ```
 Ou
 
-GET ===> http://127.0.0.1/DrinkWater/users?iduser=4
+GET ===> http://127.0.0.1/drink-water-api-php/users?iduser=4
 
 ------------------------------------------------------------------
 
 ##### Listar todos os usuários (necessário token)
-GET ===> http://127.0.0.1/DrinkWater/users/
+GET ===> http://127.0.0.1/drink-water-api-php/users/
 
 ------------------------------------------------------------------
 
 ##### Atualizar usuário por id (necessário token)
-PUT ===> http://127.0.0.1/DrinkWater/users/
+PUT ===> http://127.0.0.1/drink-water-api-php/users/
 ###### Example:
 ```json
 {
@@ -55,7 +55,7 @@ PUT ===> http://127.0.0.1/DrinkWater/users/
 ```
 Ou
 
-PUT ===> http://127.0.0.1/DrinkWater/users?iduser=4
+PUT ===> http://127.0.0.1/drink-water-api-php/users?iduser=4
 ###### Example:
 ```json
 {
@@ -67,7 +67,7 @@ PUT ===> http://127.0.0.1/DrinkWater/users?iduser=4
 ------------------------------------------------------------------
 
 ##### Deleta usuário por id (necessário token do usuário a ser deletado)
-DELETE ===> http://127.0.0.1/DrinkWater/users/
+DELETE ===> http://127.0.0.1/drink-water-api-php/users/
 ###### Example:
 ```json
 {
@@ -76,12 +76,12 @@ DELETE ===> http://127.0.0.1/DrinkWater/users/
 ```
 Ou
 
-DELETE ===> http://127.0.0.1/DrinkWater/users?iduser=4
+DELETE ===> http://127.0.0.1/drink-water-api-php/users?iduser=4
 
 ------------------------------------------------------------------
 
 ##### Beber agua (necessário token)
-POST ===> http://127.0.0.1/DrinkWater/users/drink.php
+POST ===> http://127.0.0.1/drink-water-api-php/users/drink.php
 ###### Example:
 ```json
 {
